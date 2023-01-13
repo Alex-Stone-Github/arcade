@@ -1,0 +1,134 @@
+<style>
+* {
+    padding: 0px;
+    margin: 0px;
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/p5.js"></script>
+<script>
+var ball = {
+    x: 0,
+    y: 0,
+    size: 20,
+    velx: 6,
+    vely: 5,
+};
+const paddle = {
+    width: 10,
+    height: 80,
+};
+var paddle1 = {
+    x: 0,
+    y: 0,
+};
+var paddle2 = {
+    x: 0,
+    y: 0,
+};
+function setup() {
+    createCanvas(windowWidth, windowHeight);
+    ball.x = width/2;
+    ball.y = height/2;
+    paddle1.x = 40;
+    paddle2.x = width-paddle.width - 40;
+    paddle1.y = height/2;
+    paddle2.y = height/2;
+}
+function draw() {
+    // logic
+    ball.velx += 0.1/30; // a 1/10 second increase every second
+    ball.x+=ball.velx;
+    ball.y+=ball.vely;
+    let bal = {
+        x: ball.x,
+        y: ball.y,
+        w: ball.size,
+        h: ball.size,
+    };
+    let pad1 = {
+        x: paddle1.x,
+        y: paddle1.y,
+        w: paddle.width,
+        h: paddle.height,
+    };
+    let pad2 = {
+        x: paddle2.x,
+        y: paddle2.y,
+        w: paddle.width,
+        h: paddle.height,
+    };
+    if (AABB(pad1, bal)) {
+        ball.x = pad1.x+paddle.width+1;
+        ball.velx *= -1;
+    }
+    if (AABB(pad2, bal)) {
+        ball.x = pad2.x-ball.size;
+        ball.velx *= -1;
+    }
+    if (ball.y < 0) {
+        ball.y = 0;
+        ball.vely *=-1;
+    }
+    if (ball.y + ball.size > height) {
+        ball.y = height - ball.size;
+        ball.vely *=-1;
+    }
+    const moveamt = 15;
+    if (keyIsDown(81)) {
+        paddle1.y -= moveamt;
+    }
+    if (keyIsDown(65)) {
+        paddle1.y += moveamt;
+    }
+    if (keyIsDown(80)) {
+        paddle2.y -= moveamt;
+    }
+    if (keyIsDown(76)) {
+        paddle2.y += moveamt;
+    }
+    if (keyIsDown(32)) {
+        ball.x = width/2;
+        ball.y = height/2;
+        ball.velx = 6;
+        /*
+        textAlign(CENTER, CENTER);
+        noStroke();
+        fill(200);
+        textSize(72);
+        rect(width/2-70, height/2-70, 140, 140);
+        text("3", width/2, height/2);
+        rect(width/2-70, height/2-70, 140, 140);
+        text("2", width/2, height/2);
+        rect(width/2-70, height/2-70, 140, 140);
+        text("1", width/2, height/2);
+        rect(width/2-70, height/2-70, 140, 140);
+        text("Go!", width/2, height/2);
+        */
+    }
+    if (paddle1.y < 0) {paddle1.y = 0;}
+    if (paddle1.y + paddle.height > height) {paddle1.y = height - paddle.height;}
+    if (paddle2.y < 0) {paddle2.y = 0;}
+    if (paddle2.y + paddle.height > height) {paddle2.y = height - paddle.height;}
+    // draw
+    background(200);
+    noStroke();
+    fill(0);
+    ellipse(ball.x+ball.size/2, ball.y+ball.size/2, ball.size, ball.size);
+    fill(255, 0, 0);
+    rect(paddle1.x, paddle1.y, paddle.width, paddle.height);
+    fill(0, 0, 255);
+    rect(paddle2.x, paddle2.y, paddle.width, paddle.height);
+}
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+    paddle2.x = width-40-paddle.width;
+}
+function AABB(b1, b2) {
+    if (b1.x + b1.w > b2.x && b2.x + b2.w > b1.x) {
+        if (b1.y + b1.h > b2.y && b2.y + b2.h > b1.y) {
+            return true;
+        }
+    }
+    return false;
+}
+</script>
