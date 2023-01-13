@@ -10,12 +10,12 @@ var ball = {
     x: 0,
     y: 0,
     size: 20,
-    velx: 6,
+    velx: 7,
     vely: 5,
 };
 const paddle = {
     width: 10,
-    height: 80,
+    height: 90,
 };
 var paddle1 = {
     x: 0,
@@ -36,7 +36,9 @@ function setup() {
 }
 function draw() {
     // logic
-    ball.velx += 0.1/30; // a 1/10 second increase every second
+    if (mouseIsPressed) {
+        ball.velx *= 1.01;
+    }
     ball.x+=ball.velx;
     ball.y+=ball.vely;
     let bal = {
@@ -118,6 +120,8 @@ function draw() {
     rect(paddle1.x, paddle1.y, paddle.width, paddle.height);
     fill(0, 0, 255);
     rect(paddle2.x, paddle2.y, paddle.width, paddle.height);
+    stroke(0);
+    line(width/2, 0, width/2, height);
 }
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
