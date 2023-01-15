@@ -9,7 +9,7 @@
 var ball = {
     x: 0,
     y: 0,
-    size: 20,
+    size: 15,
     velx: 7,
     vely: 5,
 };
@@ -62,66 +62,67 @@ function draw() {
     if (AABB(pad1, bal)) {
         ball.x = pad1.x+paddle.width+1;
         ball.velx *= -1;
+        ball.vely += Math.random()*2-1;
     }
     if (AABB(pad2, bal)) {
         ball.x = pad2.x-ball.size;
         ball.velx *= -1;
+        ball.vely += Math.random()*2-1;
     }
     if (ball.y < 0) {
         ball.y = 0;
         ball.vely *=-1;
+        ball.vely += Math.random()*2-1;
     }
     if (ball.y + ball.size > height) {
         ball.y = height - ball.size;
         ball.vely *=-1;
+        ball.vely += Math.random()*2-1;
     }
-    const moveamt = 15;
-    if (keyIsDown(81)) {
+    const moveamt = 18;
+    if (keyIsDown(81)) { // q
         paddle1.y -= moveamt;
     }
-    if (keyIsDown(65)) {
+    if (keyIsDown(65)) { // a
         paddle1.y += moveamt;
     }
-    if (keyIsDown(80)) {
+    if (keyIsDown(80)) { // p
         paddle2.y -= moveamt;
     }
-    if (keyIsDown(76)) {
+    if (keyIsDown(76)) { // l
         paddle2.y += moveamt;
     }
-    if (keyIsDown(32)) {
+    if (keyIsDown(13)) { // numpad enter
         ball.x = width/2;
         ball.y = height/2;
         ball.velx = 6;
-        /*
-        textAlign(CENTER, CENTER);
-        noStroke();
-        fill(200);
-        textSize(72);
-        rect(width/2-70, height/2-70, 140, 140);
-        text("3", width/2, height/2);
-        rect(width/2-70, height/2-70, 140, 140);
-        text("2", width/2, height/2);
-        rect(width/2-70, height/2-70, 140, 140);
-        text("1", width/2, height/2);
-        rect(width/2-70, height/2-70, 140, 140);
-        text("Go!", width/2, height/2);
-        */
+    }
+    if (keyIsDown(107)) { // numpadplus
+        ball.velx *= 1.01;
+    }
+    if (keyIsDown(109)) { // numpadsubtract
+        ball.velx *= 0.99;
     }
     if (paddle1.y < 0) {paddle1.y = 0;}
     if (paddle1.y + paddle.height > height) {paddle1.y = height - paddle.height;}
     if (paddle2.y < 0) {paddle2.y = 0;}
     if (paddle2.y + paddle.height > height) {paddle2.y = height - paddle.height;}
     // draw
-    background(200);
+    background(0);
+    stroke(255, 0, 255);
+    line(width/2, 0, width/2, height);
     noStroke();
-    fill(0);
+    if (ball.x + ball.size / 2 < width/2) {
+        fill(0, 0, 255);
+    }
+    else {
+        fill(255, 0, 0);
+    }
     ellipse(ball.x+ball.size/2, ball.y+ball.size/2, ball.size, ball.size);
     fill(255, 0, 0);
     rect(paddle1.x, paddle1.y, paddle.width, paddle.height);
     fill(0, 0, 255);
     rect(paddle2.x, paddle2.y, paddle.width, paddle.height);
-    stroke(0);
-    line(width/2, 0, width/2, height);
 }
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
